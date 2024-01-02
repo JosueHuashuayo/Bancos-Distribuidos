@@ -1,0 +1,64 @@
+{% comment %} <!-- detalle_cuenta.html -->
+<h2>Detalle de la Cuenta</h2>
+<p>Número de Cuenta: {{ cuenta.numero_cuenta }}</p>
+<p>Saldo: {{ cuenta.saldo }}</p>
+
+<!-- Enlace para realizar un depósito -->
+<a href="{% url 'realizar_transferencia' cuenta.id %}">Realizar Transferencia</a>
+<br>
+<a href="{% url 'realizar_retiro' cuenta.id %}">Realizar Retiro</a>
+<br>
+<a href="{% url 'realizar_deposito' cuenta.id %}">Realizar Deposito</a>
+<br>
+<a href="{% url 'realizar_transferencia_interbancaria' cuenta.id %}">Realizar Tranferencia Interbancaria</a>
+<!-- Agrega más enlaces para otros tipos de transacciones si es necesario -->
+  {% endcomment %}
+<!-- detalle_cuenta.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalle de la Cuenta</title>
+    <!-- Incluir Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .transaction-link {
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Detalle de la Cuenta</h2>
+        <div class="card">
+            <div class="card-body">
+                <p><strong>Número de Cuenta:</strong> {{ cuenta.numero_cuenta }}</p>
+                <p><strong>Saldo:</strong> {{ cuenta.saldo }}</p>
+            </div>
+        </div>
+
+        <h3>Operaciones:</h3>
+        <div class="list-group">
+            <a href="{% url 'realizar_transferencia' cuenta.id %}" class="list-group-item list-group-item-action transaction-link">Realizar Transferencia</a>
+            <a href="{% url 'realizar_retiro' cuenta.id %}" class="list-group-item list-group-item-action transaction-link">Realizar Retiro</a>
+            <a href="{% url 'realizar_deposito' cuenta.id %}" class="list-group-item list-group-item-action transaction-link">Realizar Depósito</a>
+            <a href="{% url 'realizar_transferencia_interbancaria' cuenta.id %}" class="list-group-item list-group-item-action transaction-link">Realizar Tranferencia Interbancaria</a>
+            <!-- Agrega más enlaces para otros tipos de transacciones si es necesario -->
+        </div>
+    </div>
+
+    <!-- Incluir Bootstrap JS (opcional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+    

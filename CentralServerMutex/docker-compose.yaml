@@ -1,0 +1,20 @@
+version: '3'
+
+networks:
+  serviciosmongo_mynetwork:
+    external: true
+
+services:
+  pyro_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # environment:
+    #   - PYRO_HOST=0.0.0.0
+    #   - PYRO_PORT=50000
+    container_name: my_pyro_server
+    networks:
+      serviciosmongo_mynetwork:
+        ipv4_address: 192.168.1.18
+    # ports:
+    #   - "50000:50000"

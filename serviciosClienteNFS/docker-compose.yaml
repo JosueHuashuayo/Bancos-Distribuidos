@@ -1,0 +1,122 @@
+# version: '3'
+
+# networks:
+#   serviciosmongo_mynetwork:
+#     external: true
+
+# services:
+#   nfs1:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile  # cambiar esto requiere un docker compose build
+      
+#     environment:
+#       - NFS_SERVER_IP=192.168.1.12
+#       - NFS_SHARED_FOLDER=/
+#     privileged: true
+    
+#     networks:
+#       serviciosmongo_mynetwork:
+#         ipv4_address: 192.168.1.15
+#     # command: ["sh", "-c", "/app/entrypoint.sh"]
+#     container_name: nfs1
+
+#   nfs2:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     environment:
+#       - NFS_SERVER_IP=192.168.1.12
+#       - NFS_SHARED_FOLDER=/
+#     privileged: true
+    
+#     networks:
+#       serviciosmongo_mynetwork:
+#         ipv4_address: 192.168.1.16
+#     # command: ["sh", "-c", "/app/entrypoint.sh && python manage.py runserver 0.0.0.0:8000"]
+#     container_name: nfs2
+
+#   nfs3:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     environment:
+#       - NFS_SERVER_IP=192.168.1.12
+#       - NFS_SHARED_FOLDER=/
+#     privileged: true
+    
+#     networks:
+#       serviciosmongo_mynetwork:
+#         ipv4_address: 192.168.1.17
+#     # command: ["sh", "-c", "/app/entrypoint.sh && python manage.py runserver 0.0.0.0:8000"]
+#     container_name: nfs3
+
+version: '3'
+
+networks:
+  serviciosmongo_mynetwork:
+    external: true
+
+services:
+  nfs1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NFS_SERVER_IP_1=192.168.1.12
+      - NFS_SERVER_IP_2=192.168.1.13
+      - NFS_SERVER_IP_3=192.168.1.14
+      - NFS_SHARED_FOLDER=/
+      - DIRECTORIO_NFS1=/mnt/nfs/cuentas_banco1
+      - DIRECTORIO_NFS2=/mnt/nfs/cuentas_banco2
+      - DIRECTORIO_NFS3=/mnt/nfs/cuentas_banco3
+      - BANCO_NAME=Banco1
+    privileged: true
+    networks:
+      serviciosmongo_mynetwork:
+        ipv4_address: 192.168.1.15
+    container_name: nfs1
+    ports:    
+      - "8001:8000"
+
+  nfs2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NFS_SERVER_IP_1=192.168.1.12
+      - NFS_SERVER_IP_2=192.168.1.13
+      - NFS_SERVER_IP_3=192.168.1.14
+      - NFS_SHARED_FOLDER=/
+      - DIRECTORIO_NFS1=/mnt/nfs/cuentas_banco1
+      - DIRECTORIO_NFS2=/mnt/nfs/cuentas_banco2
+      - DIRECTORIO_NFS3=/mnt/nfs/cuentas_banco3
+      - BANCO_NAME=Banco2
+    privileged: true
+    networks:
+      serviciosmongo_mynetwork:
+        ipv4_address: 192.168.1.16
+    container_name: nfs2
+    ports:    
+      - "8002:8000"
+    
+  nfs3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NFS_SERVER_IP_1=192.168.1.12
+      - NFS_SERVER_IP_2=192.168.1.13
+      - NFS_SERVER_IP_3=192.168.1.14
+      - NFS_SHARED_FOLDER=/
+      - DIRECTORIO_NFS1=/mnt/nfs/cuentas_banco1
+      - DIRECTORIO_NFS2=/mnt/nfs/cuentas_banco2
+      - DIRECTORIO_NFS3=/mnt/nfs/cuentas_banco3
+      - BANCO_NAME=Banco3
+    privileged: true
+    networks:
+      serviciosmongo_mynetwork:
+        ipv4_address: 192.168.1.17
+    container_name: nfs3
+    ports:    
+      - "8003:8000"
