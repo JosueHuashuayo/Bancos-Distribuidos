@@ -45,8 +45,8 @@ class Transaccion(models.Model):
         ('TRANSFERENCIA INTERBANCARIA', 'Transferencia Interbancaria')
     ]
 
-    cuenta_origen = models.ForeignKey(Cuenta, related_name='transacciones_origen', on_delete=models.CASCADE)
-    cuenta_destino = models.ForeignKey(Cuenta, related_name='transacciones_destino', on_delete=models.CASCADE)
+    cuenta_origen = models.ForeignKey(Cuenta, related_name='transacciones_origen', on_delete=models.CASCADE, null =True )
+    cuenta_destino = models.ForeignKey(Cuenta, related_name='transacciones_destino', on_delete=models.CASCADE, null = True)
     tipo = models.CharField(max_length=50, choices=TIPO_CHOICES)
     monto = models.DecimalField(max_digits=10, decimal_places=2)
     fecha = models.DateTimeField(auto_now_add=True)
@@ -56,11 +56,11 @@ class Transaccion(models.Model):
     
     def to_json(self):
         return {
-            'cuenta_origen': str(self.cuenta_origen),
-            'cuenta_destino': str(self.cuenta_destino),
+            'cuenta_origen': str(self.cuenta_origen) if self.cuenta_origen else "",
+            'cuenta_destino': str(self.cuenta_destino) if self.cuenta_destino else "",
             'tipo': self.tipo,
-            'monto': str(self.monto),
-            'fecha': self.fecha.strftime('%Y-%m-%d %H:%M:%S'),
+            'monto': self.monto,
+            'fecha': str(self.fecha)
         }
 
 

@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views.generic import ListView
@@ -22,7 +22,9 @@ def login_view(request):
 
     return render(request, 'login.html')
 
-
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 class ListaCuentasView(ListView):
     model = Cuenta

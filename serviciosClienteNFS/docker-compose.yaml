@@ -75,7 +75,7 @@ services:
     networks:
       serviciosmongo_mynetwork:
         ipv4_address: 192.168.1.15
-    container_name: nfs1
+    container_name: nfs1 - banco1
     ports:    
       - "8001:8000"
 
@@ -96,7 +96,7 @@ services:
     networks:
       serviciosmongo_mynetwork:
         ipv4_address: 192.168.1.16
-    container_name: nfs2
+    container_name: nfs2 - banco2
     ports:    
       - "8002:8000"
     
@@ -117,6 +117,6 @@ services:
     networks:
       serviciosmongo_mynetwork:
         ipv4_address: 192.168.1.17
-    container_name: nfs3
+    container_name: nfs3 - banco3
     ports:    
       - "8003:8000"

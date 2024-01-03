@@ -17,17 +17,25 @@
 </head>
 <body>
     <div class="container mt-4">
-        <h2>Bienvenido, {{ cuentas.0.cliente.nombre }}</h2>
-        <h2>Cuentas del Cliente</h2>
-        <ul class="list-group">
-            {% for cuenta in cuentas %}
-                <li class="list-group-item">
-                    <a href="{% url 'detalle_cuenta' cuenta.id %}">
-                        {{ cuenta.numero_cuenta }} - Saldo: {{ cuenta.saldo }} - Banco: {{cuenta.banco.nombre}}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Bienvenido, {{ cuentas.0.cliente.nombre }}</h2>
+                <h2>Cuentas del Cliente</h2>
+                <ul class="list-group">
+                    {% for cuenta in cuentas %}
+                        <li class="list-group-item">
+                            <a href="{% url 'detalle_cuenta' cuenta.id %}">
+                                {{ cuenta.numero_cuenta }} - Saldo: {{ cuenta.saldo }} - Banco: {{cuenta.banco.nombre}}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-6 text-end">
+                <!-- Agrega el enlace de Cerrar sesión en la esquina superior derecha -->
+                <a href="{% url 'logout' %}" class="btn btn-danger mt-3">Cerrar sesión</a>
+            </div>
+        </div>
     </div>
 
     <!-- Incluir Bootstrap JS (opcional) -->

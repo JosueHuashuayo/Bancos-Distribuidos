@@ -28,7 +28,8 @@ class RealizarTransferenciaInternaView(View):
         cuentas_destino = Cuenta.objects.filter(cliente=cuenta.cliente).exclude(id=cuenta_id)  # Excluye la cuenta actual como destinatario
         # cuentas_destino = Cuenta.objects.exclude(id=cuenta_id)  # Excluye la cuenta actual como destinatario
         return render(request, self.template_name, {'cuenta': cuenta, 'cuentas_destino': cuentas_destino})
-
+    
+    @transaction.atomic
     @atomic
     def post(self, request, cuenta_id):
         monto_str = request.POST.get('monto')
@@ -56,6 +57,7 @@ class RealizarTransferenciaInternaView(View):
             cuenta_origen.saldo = (cuenta_origen.saldo.to_decimal() - monto)
             cuenta_destino.saldo = (cuenta_destino.saldo.to_decimal() + monto)
             actualizar_archivo_json(cuenta_origen, cuenta_destino, monto, transaccion)
+            actualizar_archivo_json(cuenta_destino, cuenta_origen, monto, transaccion)
             cuenta_origen.save()
             cuenta_destino.save()
 
@@ -71,7 +73,8 @@ class RealizarTransferenciaInterbancariaView(View):
     def get(self, request, cuenta_id):
         cuenta = get_object_or_404(Cuenta, id=cuenta_id)
         return render(request, self.template_name, {'cuenta': cuenta})
-
+    
+    @transaction.atomic
     @atomic
     def post(self, request, cuenta_id):
         monto_str = request.POST.get('monto')
@@ -98,7 +101,7 @@ class RealizarTransferenciaInterbancariaView(View):
             cuenta_origen.saldo = (cuenta_origen.saldo.to_decimal() - monto)
             cuenta_destino.saldo = (cuenta_destino.saldo.to_decimal() + monto)
             actualizar_archivo_json(cuenta_origen, cuenta_destino, monto, transaccion)
-            actualizar_archivo_json(cuenta_origen, cuenta_destino, monto, transaccion)
+            actualizar_archivo_json(cuenta_destino, cuenta_origen, monto, transaccion)
             cuenta_origen.save()
             cuenta_destino.save()
 
@@ -119,7 +122,8 @@ class RealizarDepositoView(View):
     def get(self, request, cuenta_id):
         cuenta = get_object_or_404(Cuenta, id=cuenta_id)
         return render(request, self.template_name, {'cuenta': cuenta})
-
+    
+    @transaction.atomic
     @atomic
     def post(self, request, cuenta_id):
         monto_str = request.POST.get('monto')
@@ -135,6 +139,7 @@ class RealizarDepositoView(View):
         # Lógica para procesar el depósito (guardar la transacción, actualizar el saldo, etc.)
         if monto:
             transaccion = Transaccion.objects.create(
+                cuenta_origen=None,
                 cuenta_destino=cuenta_destino,
                 monto=monto,
                 tipo='DEPOSITO'
@@ -157,7 +162,8 @@ class RealizarRetiroView(View):
     def get(self, request, cuenta_id):
         cuenta = get_object_or_404(Cuenta, id=cuenta_id)
         return render(request, self.template_name, {'cuenta': cuenta})
-
+        
+    @transaction.atomic
     @atomic
     def post(self, request, cuenta_id):
 
@@ -175,10 +181,11 @@ class RealizarRetiroView(View):
         if monto and cuenta_origen.saldo.to_decimal() >= monto:
             transaccion = Transaccion.objects.create(
                 cuenta_origen=cuenta_origen,
+                cuenta_destino=None,
                 monto=monto,
                 tipo='RETIRO',
-                fecha=datetime.now()
-                # saldo=Decimal128(Decimal(cuenta_origen.saldo))
+                # fecha=datetime.now()
+                
             )
             
             cuenta_origen.saldo = cuenta_origen.saldo.to_decimal() - monto
@@ -222,16 +229,11 @@ def actualizar_archivo_json(cuenta_origen, cuenta_destino, monto, transaccion):
             'transacciones': []
             }
 
-    # transaccion['monto_actual_cuenta'] = cuenta_origen.saldo
     # Agrega la nueva transacción al diccionario
-    datos['transacciones'].append(model_to_dict(transaccion))
-
-    
+    datos['transacciones'].append(transaccion.to_json())
 
     # Guarda el diccionario actualizado en el archivo JSON
     with open(ruta_archivo_json, 'w') as archivo_json:
         json.dump(json.loads(json.dumps(datos, use_decimal=True, default=str)), archivo_json)
 
-
-    # release_cs(central_server, key)
     print(f"salió de la sección crítica.")
